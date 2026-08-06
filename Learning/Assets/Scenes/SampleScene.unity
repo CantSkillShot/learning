@@ -349,10 +349,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1517504219}
+  - component: {fileID: 1517504222}
   - component: {fileID: 1517504218}
   - component: {fileID: 1517504221}
   - component: {fileID: 1517504220}
-  - component: {fileID: 1517504222}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -509,7 +509,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cc886fb11b976345947989a440c076c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  rb: {fileID: 1517504221}
+  moveSpeed: 3.5
+  jumpForce: 8
 --- !u!1 &1553314751
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,7 +522,6 @@ GameObject:
   - component: {fileID: 1553314753}
   - component: {fileID: 1553314752}
   - component: {fileID: 1553314754}
-  - component: {fileID: 1553314755}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -649,33 +649,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!50 &1553314755
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553314751}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 5
-  m_LinearDamping: 0
-  m_AngularDamping: 2
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
