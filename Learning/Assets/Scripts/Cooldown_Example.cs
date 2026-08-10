@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Cooldown_Example : MonoBehaviour
 {
     private SpriteRenderer sr;
 
