@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -6,6 +7,15 @@ public class Entity : MonoBehaviour
 {
     protected Animator anim;
     protected Rigidbody2D rb;
+    protected Collider2D col;
+    protected SpriteRenderer sr;
+
+    [Header("Health")]
+    [SerializeField] private int maxHealth = 1;
+    [SerializeField] private int currentHealth;
+    [SerializeField] private Material damageMaterial;
+    [SerializeField] private float damageFeedbackDuration = 0.2f;
+    private Coroutine damageFeedbackCoroutine;
 
     [Header("Attack details")]
     [SerializeField] protected float attackRadius;
@@ -17,7 +27,7 @@ public class Entity : MonoBehaviour
     [SerializeField] private float jumpForce = 8;
     protected int facingDir = 1;
     protected bool canMove = true;
-    private bool facingRight = true;
+    protected bool facingRight = true;
     private bool canJump = true;
     private float xInput;
 
@@ -31,7 +41,11 @@ public class Entity : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
         anim = GetComponentInChildren<Animator>();
+        sr = GetComponentInChildren<SpriteRenderer>();
+
+        currentHealth = maxHealth;
     }
 
 
@@ -57,7 +71,43 @@ public class Entity : MonoBehaviour
 
     private void TakeDamage()
     {
-        //throw new NotImplementedException();
+        currentHealth = currentHealth - 1;
+        PlayDamageFeedback();
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void PlayDamageFeedback()
+    {
+        if (damageFeedbackCoroutine != null)
+        {
+            StopCoroutine(damageFeedbackCoroutine);
+        }
+
+        StartCoroutine(DamageFeedbackCo());
+    }
+
+    private IEnumerator DamageFeedbackCo()
+    {
+        Material originalMat = sr.material;
+
+        sr.material = damageMaterial;
+
+        yield return new WaitForSeconds(damageFeedbackDuration);
+
+        sr.material = originalMat;
+    }
+
+    protected virtual void Die()
+    {
+        anim.enabled = false;
+        col.enabled = false;
+
+        rb.gravityScale = 12;
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 15);
     }
 
     public void EnableMovementAndJump(bool enable)
@@ -121,7 +171,7 @@ public class Entity : MonoBehaviour
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
     }
 
-    protected void HandleFlip()
+    protected virtual void HandleFlip()
     {
         if (rb.linearVelocity.x > 0 && facingRight == false)
         {
@@ -133,7 +183,7 @@ public class Entity : MonoBehaviour
         }
     }
 
-    private void Flip()
+    protected void Flip()
     {
         transform.Rotate(0, 180, 0);
         facingRight = !facingRight;
@@ -143,6 +193,10 @@ public class Entity : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
-        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+
+        if (attackPoint != null)
+        { 
+            Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+        }
     }
 }
