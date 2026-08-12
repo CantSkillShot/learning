@@ -6,6 +6,7 @@ public class UI : MonoBehaviour
 {
     public static UI instance;
     private bool isGameOver = false;
+    private AudioSource uiAudio;
 
     [SerializeField] private GameObject gameOverUI;
     [Space]
@@ -18,6 +19,7 @@ public class UI : MonoBehaviour
     {
         instance = this;
         Time.timeScale = 1.0f;
+        uiAudio = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -33,6 +35,7 @@ public class UI : MonoBehaviour
         isGameOver = true;
         Time.timeScale = 0.5f;
         gameOverUI.SetActive(true);
+        uiAudio.mute = true;
     }
 
     public void RestartLevel()

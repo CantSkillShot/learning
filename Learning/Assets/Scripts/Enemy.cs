@@ -15,9 +15,11 @@ public class Enemy : Entity
 
     protected override void HandleAttack()
     {
-        if (playerDetected)
+        if (playerDetected && Time.time >= nextAttackTime)
         {
             anim.SetTrigger("attack");
+            entityAudio.PlayOneShot(attack, 0.5f);
+            nextAttackTime = Time.time + attackCooldown + 1.0f;
         }
     }
 

@@ -9,6 +9,8 @@ public class Entity : MonoBehaviour
     protected Rigidbody2D rb;
     protected Collider2D col;
     protected SpriteRenderer sr;
+    protected AudioSource entityAudio;
+
 
     [Header("Health")]
     [SerializeField] private int maxHealth = 1;
@@ -21,11 +23,17 @@ public class Entity : MonoBehaviour
     [SerializeField] protected float attackRadius;
     [SerializeField] protected Transform attackPoint;
     [SerializeField] protected LayerMask whatIsTarget;
+    protected float attackCooldown = 0.5f;
+    protected float nextAttackTime = 0f;
 
     [Header("Collision details")]
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask whatIsGround;
     protected bool isGrounded;
+
+    [Header("Sound effects")]
+    [SerializeField]protected AudioClip attack;
+    [SerializeField]protected AudioClip damage;
 
     // Facing direction details
     protected int facingDir = 1;
@@ -38,6 +46,7 @@ public class Entity : MonoBehaviour
         col = GetComponent<Collider2D>();
         anim = GetComponentInChildren<Animator>();
         sr = GetComponentInChildren<SpriteRenderer>();
+        entityAudio = GetComponent<AudioSource>();
 
         currentHealth = maxHealth;
     }
@@ -58,6 +67,7 @@ public class Entity : MonoBehaviour
         foreach (Collider2D enemy in enemyColliders)
         {
             Entity entityTarget = enemy.GetComponent<Entity>();
+            entityAudio.PlayOneShot(damage, 0.25f);
             entityTarget.TakeDamage();
         }
     }
@@ -118,9 +128,11 @@ public class Entity : MonoBehaviour
 
     protected virtual void HandleAttack()
     {
-        if (isGrounded)
+        if (isGrounded && Time.time >= nextAttackTime)
         {
             anim.SetTrigger("attack");
+            entityAudio.PlayOneShot(attack, 0.5f);
+            nextAttackTime = Time.time + attackCooldown;
         }
     }
 
