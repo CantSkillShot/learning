@@ -38,4 +38,10 @@ public class Enemy : Entity
         base.HandleCollision();
         playerDetected = Physics2D.OverlapCircle(attackPoint.position, attackRadius, whatIsTarget);
     }
+
+    protected override void Die()
+    {
+        base.Die();
+        UI.instance.AddKillCount();
+    }
 }
